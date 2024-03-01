@@ -1,15 +1,15 @@
 {
-  "name": "@chakrahq/react-native-side-menu",
+  "name": "@haveamission/react-native-side-menu",
   "version": "1.3.4",
   "description": "Simple customizable component to create side menu",
-  "main": "build/index.js",
+  "main": "build/index.tsx",
   "scripts": {
-    "build": "babel index.js styles.js -d build",
-    "prepublish": "babel index.js styles.js -d build"
+    "build": "babel index.tsx styles.js -d build",
+    "prepublish": "babel index.tsx styles.js -d build"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:chakrahq/react-native-side-menu.git"
+    "url": "git@github.com:haveamission/react-native-side-menu.git"
   },
   "keywords": [
     "react-native",
@@ -17,23 +17,18 @@
     "ios",
     "sidebar"
   ],
-  "author": "ChakraHQ <engineering@chakrahq.com> (https://github.com/chakrahq)",
+  "author": "haveamission <andy@codexr.io> (https://github.com/haveamission)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/chakrahq/react-native-side-menu/issues"
+    "url": "https://github.com/haveamission/react-native-side-menu/issues"
   },
-  "homepage": "https://github.com/chakrahq/react-native-side-menu",
-  "dependencies": {
-    "prop-types": "^15.8.1"
-  },
+  "homepage": "https://github.com/haveamission/react-native-side-menu",
   "devDependencies": {
     "@babel/core": "^7.17.8",
-    "@babel/plugin-syntax-flow": "^7.16.7",
     "@babel/plugin-transform-react-jsx": "^7.17.3",
     "@babel/preset-env": "^7.16.11",
     "babel-cli": "^6.26.0",
     "babel-eslint": "^10.1.0",
-    "babel-preset-flow": "^6.23.0",
     "babel-preset-react-native": "^4.0.1",
     "eslint": "^8.12.0",
     "eslint-config-airbnb": "^19.0.4",
@@ -42,7 +37,6 @@
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-react-hooks": "^4.3.0",
-    "flow-bin": "^0.174.1",
     "fsevents": "^2.3.2",
     "react": "^17.0.2",
     "react-native": "^0.67.4"
