@@ -2,7 +2,7 @@
 
 ## Customizable side menu for react-native
 
-| iOS | android |
+| iOS | Android |
 | --- | --- |
 | <img src="https://user-images.githubusercontent.com/6936373/71641602-eb969700-2ce1-11ea-9698-c251ccd19b65.png" width="320" />  | <img src="https://user-images.githubusercontent.com/6936373/71641601-eb969700-2ce1-11ea-82e3-c09a63145989.png" width="320" />  |
 
@@ -16,7 +16,7 @@
 
 ### Installation
 ```bash
-npm install @chakrahq/react-native-side-menu --save
+npm install @haveamission/react-native-side-menu --save
 ```
 
 ### Usage example
@@ -105,7 +105,8 @@ Ensure that your main view has a background color applied
 Feel free to [create an issue](https://github.com/chakrahq/react-native-side-menu/issues/new)
 
 ### Credits
-This repository is a fork of a fork. Original sources were not maintained for long, so we created this fork and maintain it. We would like to give our thanks and credit for the efforts of the original authors and contributors of these original sources:
+This repository is a fork of a fork of a fork. Original sources were not maintained for long, so we created this fork and maintain it. We would like to give our thanks and credit for the efforts of the original authors and contributors of these original sources:
+- [chakrahq/react-native-side-menu](https://github.com/chakrahq/react-native-side-menu)
 - [Kureev/react-native-side-menu](https://github.com/Kureev/react-native-side-menu)
 - [alessiocancian/react-native-side-menu](https://github.com/alessiocancian/react-native-side-menu)
 
