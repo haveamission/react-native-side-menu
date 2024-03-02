@@ -26,6 +26,9 @@ type Props = {
     value: number
   ) => Animated.CompositeAnimation;
   onAnimationComplete?: () => void;
+  animationStyle: (
+    value: Animated.Value
+  ) => Animated.WithAnimatedValue<React.CSSProperties>;
   onStartShouldSetResponderCapture?: () => boolean;
   isOpen?: boolean;
   bounceBackOnOverdraw?: boolean;
@@ -66,6 +69,9 @@ const SideMenu: React.FC<Props> = ({
   menu,
   overlayColor,
   onSliding = () => {},
+  animationStyle = (value) => ({
+    transform: [{ translateX: value }],
+  }),
 }) => {
   const deviceScreen: WindowDimensions = Dimensions.get("window");
   const barrierForward: number = deviceScreen.width / 4;
@@ -77,15 +83,71 @@ const SideMenu: React.FC<Props> = ({
   const [hiddenMenuOffsetPercentage] = useState(
     hiddenMenuOffset / deviceScreen.width
   );
-  const [left] = useState(
+  const [left] = useState<Animated.Value>(
     new Animated.Value(isOpen ? openMenuOffset : hiddenMenuOffset)
   );
   const [prevLeft, setPrevLeft] = useState(0);
   const [menuIsOpen, setMenuIsOpen] = useState(isOpen);
 
+  const openMenu = (isOpen: boolean) => {
+    moveLeft(isOpen ? openMenuOffset : hiddenMenuOffset);
+    setMenuIsOpen(isOpen);
+    onChange(isOpen);
+  };
+
+  const handlePanResponderMove = (e: any, gestureState: any) => {
+    // TODO figure out a more idiomatic way of doing this (maybe a ref?)
+    //@ts-ignore
+    if (left.__getValue() * menuPositionMultiplier() >= 0) {
+      let newLeft = prevLeft + gestureState.dx;
+
+      if (!bounceBackOnOverdraw && Math.abs(newLeft) > openMenuOffset) {
+        newLeft = menuPositionMultiplier() * openMenuOffset;
+      }
+
+      onMove(newLeft);
+      left.setValue(newLeft);
+    }
+  };
+
+  const handlePanResponderEnd = (e: any, gestureState: any) => {
+    // TODO figure out a more idiomatic way of doing this (maybe a ref?)
+    const offsetLeft =
+      //@ts-ignore
+      menuPositionMultiplier() * (left.__getValue() + gestureState.dx);
+
+    openMenu(shouldOpenMenu(offsetLeft));
+  };
+
+  const handleMoveShouldSetPanResponder = (
+    e: any,
+    gestureState: any
+  ): boolean => {
+    if (gesturesAreEnabled()) {
+      const x = Math.round(Math.abs(gestureState.dx));
+      const y = Math.round(Math.abs(gestureState.dy));
+
+      const touchMoved = x > toleranceX && y < toleranceY;
+
+      if (menuIsOpen) {
+        return touchMoved;
+      }
+
+      const withinEdgeHitWidth =
+        menuPosition === "right"
+          ? gestureState.moveX > deviceScreen.width - edgeHitWidth
+          : gestureState.moveX < edgeHitWidth;
+
+      const swipingToOpen = menuPositionMultiplier() * gestureState.dx > 0;
+      return withinEdgeHitWidth && touchMoved && swipingToOpen;
+    }
+
+    return false;
+  };
+
   const responder = useRef(
     PanResponder.create({
-      onStartShouldSetResponderCapture: onStartShouldSetResponderCapture,
+      onStartShouldSetPanResponderCapture: onStartShouldSetResponderCapture,
       onMoveShouldSetPanResponder: handleMoveShouldSetPanResponder,
       onPanResponderMove: handlePanResponderMove,
       onPanResponderRelease: handlePanResponderEnd,
@@ -152,59 +214,6 @@ const SideMenu: React.FC<Props> = ({
     return menuPosition === "right" ? -1 : 1;
   };
 
-  const handlePanResponderMove = (e: any, gestureState: any) => {
-    if (left.__getValue() * menuPositionMultiplier() >= 0) {
-      let newLeft = prevLeft + gestureState.dx;
-
-      if (!bounceBackOnOverdraw && Math.abs(newLeft) > openMenuOffset) {
-        newLeft = menuPositionMultiplier() * openMenuOffset;
-      }
-
-      onMove(newLeft);
-      left.setValue(newLeft);
-    }
-  };
-
-  const handlePanResponderEnd = (e: any, gestureState: any) => {
-    const offsetLeft =
-      menuPositionMultiplier() * (left.__getValue() + gestureState.dx);
-
-    openMenu(shouldOpenMenu(offsetLeft));
-  };
-
-  const handleMoveShouldSetPanResponder = (
-    e: any,
-    gestureState: any
-  ): boolean => {
-    if (gesturesAreEnabled()) {
-      const x = Math.round(Math.abs(gestureState.dx));
-      const y = Math.round(Math.abs(gestureState.dy));
-
-      const touchMoved = x > toleranceX && y < toleranceY;
-
-      if (menuIsOpen) {
-        return touchMoved;
-      }
-
-      const withinEdgeHitWidth =
-        menuPosition === "right"
-          ? gestureState.moveX > deviceScreen.width - edgeHitWidth
-          : gestureState.moveX < edgeHitWidth;
-
-      const swipingToOpen = menuPositionMultiplier() * gestureState.dx > 0;
-      return withinEdgeHitWidth && touchMoved && swipingToOpen;
-    }
-
-    return false;
-  };
-
-  const openMenu = (isOpen: boolean) => {
-    const { hiddenMenuOffset, openMenuOffset } = state;
-    moveLeft(isOpen ? openMenuOffset : hiddenMenuOffset);
-    setMenuIsOpen(isOpen);
-    onChange(isOpen);
-  };
-
   const gesturesAreEnabled = (): boolean => {
     if (typeof disableGestures === "function") {
       return !disableGestures();
@@ -244,6 +253,8 @@ const SideMenu: React.FC<Props> = ({
     const style = [styles.frontView, { width, height }, animationStyle(left)];
 
     return (
+      // TODO some issue with style - look into
+      //@ts-ignore
       <Animated.View style={style} ref={ref} {...responder.panHandlers}>
         {children}
         {overlayContainer}
