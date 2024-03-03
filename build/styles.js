@@ -1,3 +1,4 @@
+"use strict";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -9,7 +10,8 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-import { StyleSheet } from "react-native";
+Object.defineProperty(exports, "__esModule", { value: true });
+var react_native_1 = require("react-native");
 var absoluteStretch = {
     position: "absolute",
     top: 0,
@@ -17,7 +19,7 @@ var absoluteStretch = {
     bottom: 0,
     right: 0,
 };
-var styles = StyleSheet.create({
+var styles = react_native_1.StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: "center",
@@ -33,5 +35,5 @@ var styles = StyleSheet.create({
     },
     overlay: __assign({}, absoluteStretch),
 });
-export default styles;
+exports.default = styles;
 //# sourceMappingURL=styles.js.map
