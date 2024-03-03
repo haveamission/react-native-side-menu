@@ -3,4 +3,5 @@ node_modules
 .DS_Store
 **/.DS_Store
 .idea
-build
+styles.ts
+index.tsx
