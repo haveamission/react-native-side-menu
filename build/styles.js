@@ -1,4 +1,6 @@
-import { StyleSheet } from "react-native";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_native_1 = require("react-native");
 const absoluteStretch = {
     position: "absolute",
     top: 0,
@@ -6,7 +8,7 @@ const absoluteStretch = {
     bottom: 0,
     right: 0,
 };
-const styles = StyleSheet.create({
+const styles = react_native_1.StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: "center",
@@ -26,5 +28,5 @@ const styles = StyleSheet.create({
         ...absoluteStretch,
     },
 });
-export default styles;
+exports.default = styles;
 //# sourceMappingURL=styles.js.map

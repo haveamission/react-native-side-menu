@@ -1,22 +1,50 @@
-import React, { useState, useRef, useEffect } from "react";
-import { PanResponder, View, Dimensions, Animated, TouchableWithoutFeedback, } from "react-native";
-import styles from "./styles";
-const SideMenu = ({ edgeHitWidth = 60, toleranceX = 10, toleranceY = 10, menuPosition = "left", onChange = () => { }, onMove = () => { }, openMenuOffset = Dimensions.get("window").width * (2 / 3), hiddenMenuOffset = 0, disableGestures = false, animationFunction = (prop, value) => Animated.spring(prop, {
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const react_1 = __importStar(require("react"));
+const react_native_1 = require("react-native");
+const styles_1 = __importDefault(require("./styles"));
+const SideMenu = ({ edgeHitWidth = 60, toleranceX = 10, toleranceY = 10, menuPosition = "left", onChange = () => { }, onMove = () => { }, openMenuOffset = react_native_1.Dimensions.get("window").width * (2 / 3), hiddenMenuOffset = 0, disableGestures = false, animationFunction = (prop, value) => react_native_1.Animated.spring(prop, {
     toValue: value,
     friction: 8,
     useNativeDriver: true,
 }), onAnimationComplete = () => { }, onStartShouldSetResponderCapture = () => true, isOpen = false, bounceBackOnOverdraw = true, autoClosing = true, allowOverlayPressPropagation = false, overlayOpacity = 1, animateOverlayOpacity = true, children, menu, overlayColor, onSliding = () => { }, animationStyle = (value) => ({
     transform: [{ translateX: value }],
 }), }) => {
-    const deviceScreen = Dimensions.get("window");
+    const deviceScreen = react_native_1.Dimensions.get("window");
     const barrierForward = deviceScreen.width / 4;
-    const [width, setWidth] = useState(deviceScreen.width);
-    const [height, setHeight] = useState(deviceScreen.height);
-    const [openOffsetMenuPercentage] = useState(openMenuOffset / deviceScreen.width);
-    const [hiddenMenuOffsetPercentage] = useState(hiddenMenuOffset / deviceScreen.width);
-    const [left] = useState(new Animated.Value(isOpen ? openMenuOffset : hiddenMenuOffset));
-    const [prevLeft, setPrevLeft] = useState(0);
-    const [menuIsOpen, setMenuIsOpen] = useState(isOpen);
+    const [width, setWidth] = (0, react_1.useState)(deviceScreen.width);
+    const [height, setHeight] = (0, react_1.useState)(deviceScreen.height);
+    const [openOffsetMenuPercentage] = (0, react_1.useState)(openMenuOffset / deviceScreen.width);
+    const [hiddenMenuOffsetPercentage] = (0, react_1.useState)(hiddenMenuOffset / deviceScreen.width);
+    const [left] = (0, react_1.useState)(new react_native_1.Animated.Value(isOpen ? openMenuOffset : hiddenMenuOffset));
+    const [prevLeft, setPrevLeft] = (0, react_1.useState)(0);
+    const [menuIsOpen, setMenuIsOpen] = (0, react_1.useState)(isOpen);
     const openMenu = (isOpen) => {
         moveLeft(isOpen ? openMenuOffset : hiddenMenuOffset);
         setMenuIsOpen(isOpen);
@@ -57,20 +85,20 @@ const SideMenu = ({ edgeHitWidth = 60, toleranceX = 10, toleranceY = 10, menuPos
         }
         return false;
     };
-    const responder = useRef(PanResponder.create({
+    const responder = (0, react_1.useRef)(react_native_1.PanResponder.create({
         onStartShouldSetPanResponderCapture: onStartShouldSetResponderCapture,
         onMoveShouldSetPanResponder: handleMoveShouldSetPanResponder,
         onPanResponderMove: handlePanResponderMove,
         onPanResponderRelease: handlePanResponderEnd,
         onPanResponderTerminate: handlePanResponderEnd,
     })).current;
-    useEffect(() => {
+    (0, react_1.useEffect)(() => {
         const listener = left.addListener(({ value }) => onSliding(Math.abs((value - hiddenMenuOffset) / (openMenuOffset - hiddenMenuOffset))));
         return () => {
             left.removeListener(listener);
         };
     }, [hiddenMenuOffset, left, onSliding, openMenuOffset]);
-    useEffect(() => {
+    (0, react_1.useEffect)(() => {
         if (typeof isOpen !== "undefined" &&
             menuIsOpen !== isOpen &&
             (autoClosing || !menuIsOpen)) {
@@ -112,14 +140,14 @@ const SideMenu = ({ edgeHitWidth = 60, toleranceX = 10, toleranceY = 10, menuPos
         return !disableGestures;
     };
     const getContentView = () => {
-        const overlayContainer = (<TouchableWithoutFeedback onPress={(e) => {
+        const overlayContainer = (<react_native_1.TouchableWithoutFeedback onPress={(e) => {
                 if (!allowOverlayPressPropagation) {
                     e.stopPropagation();
                 }
                 openMenu(false);
             }}>
-        <Animated.View pointerEvents={menuIsOpen ? "auto" : "none"} style={[
-                styles.overlay,
+        <react_native_1.Animated.View pointerEvents={menuIsOpen ? "auto" : "none"} style={[
+                styles_1.default.overlay,
                 {
                     backgroundColor: getOverlayColor(),
                     opacity: animateOverlayOpacity
@@ -130,25 +158,25 @@ const SideMenu = ({ edgeHitWidth = 60, toleranceX = 10, toleranceY = 10, menuPos
                         : overlayOpacity,
                 },
             ]}/>
-      </TouchableWithoutFeedback>);
-        const ref = useRef(null);
-        const style = [styles.frontView, { width, height }, animationStyle(left)];
+      </react_native_1.TouchableWithoutFeedback>);
+        const ref = (0, react_1.useRef)(null);
+        const style = [styles_1.default.frontView, { width, height }, animationStyle(left)];
         return (
         // TODO some issue with style - look into
         //@ts-ignore
-        <Animated.View style={style} ref={ref} {...responder.panHandlers}>
+        <react_native_1.Animated.View style={style} ref={ref} {...responder.panHandlers}>
         {children}
         {overlayContainer}
-      </Animated.View>);
+      </react_native_1.Animated.View>);
     };
     const boundryStyle = menuPosition === "right"
         ? { left: width - openMenuOffset }
         : { right: width - openMenuOffset };
-    const menuElement = <View style={[styles.menu, boundryStyle]}>{menu}</View>;
-    return (<View style={styles.container} onLayout={onLayoutChange}>
+    const menuElement = <react_native_1.View style={[styles_1.default.menu, boundryStyle]}>{menu}</react_native_1.View>;
+    return (<react_native_1.View style={styles_1.default.container} onLayout={onLayoutChange}>
       {menuElement}
       {getContentView()}
-    </View>);
+    </react_native_1.View>);
 };
-export default SideMenu;
+exports.default = SideMenu;
 //# sourceMappingURL=index.js.map
